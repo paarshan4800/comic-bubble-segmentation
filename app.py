@@ -26,6 +26,8 @@ def allowed_file(filename):
 @cbr.route('/')
 @cbr.route('/index')
 def index():
+    if 'image' not in request.files or not request.files['image']:
+        return 'No file sent', 400
     return render_template('index.html', title='Damish\'s ComicBookReader')
 
 @cbr.route('/segment', methods=['POST'])
@@ -38,11 +40,19 @@ def segment():
     
     if file and allowed_file(file.filename):
         npimg = numpy.fromstring(file.read(), numpy.uint8)
+        if 'image' not in request.files or not request.files['image']:
+        return 'No file sent', 400
         img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
+        if 'image' not in request.files or not request.files['image']:
+        return 'No file sent', 400
+
         contours = findSpeechBubbles(img)
         cv2.drawContours(img, contours, -1, (0, 255, 0), 3)
         #cv2.imwrite('C:/Users/Akash/Desktop/Contours.jpg', img)
         _, buffer = cv2.imencode('.jpg', img)
+        if 'image' not in request.files or not request.files['image']:
+        return 'No file sent', 400
         
         return send_file(
             io.BytesIO(buffer),
@@ -60,9 +70,17 @@ def read():
     
     if file and allowed_file(file.filename):
         npimg = numpy.fromstring(file.read(), numpy.uint8)
+        if 'image' not in request.files or not request.files['image']:
+        return 'No file sent', 400
         img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
+        if 'image' not in request.files or not request.files['image']:
+        return 'No file sent', 400
+
         croppedImageList = segmentPage(img)
         pageText = parseComicSpeechBubbles(croppedImageList)
+        if 'image' not in request.files or not request.files['image']:
+        return 'No file sent', 400
         data = {"pageText": pageText}
         return data, 200
 
