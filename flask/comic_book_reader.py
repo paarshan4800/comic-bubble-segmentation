@@ -10,6 +10,11 @@ def get_contour_precedence(contour, cols):
 def findSpeechBubbles(image): 
     printlist=[] 
     #create gray image
+    plt.imshow(image, cmap = None, interpolation = None)
+    plt.xticks([]), plt.yticks([])  
+    plt.show()
+    plt.clf()
+    
     imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     #cv2.imwrite('C:/Users/Akash/Desktop/Test_gray.jpg', imageGray)
 
@@ -44,11 +49,19 @@ def findSpeechBubbles(image):
     #-------------------------------------------------------------
 
     contours, hierarchy = cv2.findContours(binary,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+
     contourMap = {}
     finalContourList = []
     contourMap = filterContoursBySize(contours)
     finalContourList = list(contourMap.values())
+
+    
+    
+    
+
     finalContourList.sort(key=lambda x:get_contour_precedence(x, binary.shape[1]))
+
+    
     pts_x=[]
     pts_y=[]
     print("\n\n\n\n")
@@ -62,7 +75,7 @@ def findSpeechBubbles(image):
             
                 
                 
-    time.sleep(3)    
+    #time.sleep(3)    
     plt.scatter(pts_x, pts_y) 
     plt.show() 
 
@@ -81,8 +94,13 @@ def findSpeechBubbles(image):
 def filterContoursBySize(contours):
     contourMap = {}
     for i in range(len(contours)):
+        # Filter out speech bubble candidates with unreasonable size
         if cv2.contourArea(contours[i]) < 120000 and cv2.contourArea(contours[i]) > 4000:
+            # Smooth out contours that were found
             epsilon = 0.0025*cv2.arcLength(contours[i], True)
             approximatedContour = cv2.approxPolyDP(contours[i], epsilon, True)
             contourMap[i] = approximatedContour
     return contourMap
+
+
+
