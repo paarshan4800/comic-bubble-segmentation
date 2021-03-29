@@ -7,7 +7,10 @@ def get_contour_precedence(contour, cols):
     origin = cv2.boundingRect(contour)
     return ((origin[1] // tolerance_factor) * tolerance_factor) * cols + origin[0]
 
-def findSpeechBubbles(image): 
+def findSpeechBubbles(image):
+    
+    #count and disp number of bubbles 
+
     printlist=[] 
     #create gray image
     plt.imshow(image, cmap = None, interpolation = None)

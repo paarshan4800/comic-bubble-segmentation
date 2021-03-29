@@ -28,6 +28,7 @@ for i in range(len(contours)):
 	if area < (0.02 * img_area) or area > (0.9 * img_area):
 		continue
 	x, y, w, h = cv2.boundingRect(contours[i])
+	exit()
 	# create panel mask
 	panel_mask = np.ones_like(panel_block_mask, "int32")
 	cv2.fillPoly(panel_mask, [contours[i].astype("int32")], color=(0, 0, 0))
