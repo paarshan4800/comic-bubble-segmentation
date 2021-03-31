@@ -8,7 +8,8 @@ def get_contour_precedence(contour, cols):
     origin = cv2.boundingRect(contour)
     return ((origin[1] // tolerance_factor) * tolerance_factor) * cols + origin[0]
 
-def findSpeechBubbles(image):
+def findSpeechBubbles(image,timestamp):
+    save_location="C:\\Users\\Akash\\Desktop\\ops\\"+timestamp+'\\'
     
     #count and disp number of bubbles 
 
@@ -21,8 +22,10 @@ def findSpeechBubbles(image):
     # plt.clf()
 
     #--------------Preeth----------
-    cv2.imshow("input image",image)
-    cv2.waitKey()
+    # cv2.imshow("input image",image)
+    # cv2.waitKey()
+
+    cv2.imwrite(save_location+'input_img.png',image)
 
     
     imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -36,8 +39,8 @@ def findSpeechBubbles(image):
     # plt.clf()
 
     #--------------Preeth----------
-    cv2.imshow("gray image",image)
-    cv2.waitKey()
+    cv2.imwrite(save_location+'gray_img.png',imageGray)
+    
     
 
 
@@ -53,10 +56,15 @@ def findSpeechBubbles(image):
     # plt.clf()
 
     #--------------Preeth----------
+    """
     cv2.imshow("threshold image",binary)
     cv2.waitKey()
+    """
 
     #-------------------------------------------------------------
+
+    #cv2.imwrite(,)
+    cv2.imwrite(save_location+'binary_thresh.png',binary)
     
     binary_inv= cv2.threshold(imageGray,235,255,cv2.THRESH_BINARY_INV)[1]
       #---------------Akash----------
@@ -68,6 +76,7 @@ def findSpeechBubbles(image):
     # plt.clf()
 
     #-------------------------------------------------------------
+    cv2.imwrite(save_location+'binary_inv.png',binary_inv)
 
     contours, hierarchy = cv2.findContours(binary,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
@@ -99,21 +108,31 @@ def findSpeechBubbles(image):
     
     # ---------------preeth-------
     plt.scatter(pts_x,pts_y)
-    plt.savefig(r"C:\Users\HOME\Desktop\New folder\comic-book-reader\flask\plot.png")
+    plt.savefig(save_location+'contour.png')
     plt.clf()
- 
     
     
 
     it=0
+    f= open(save_location+'contour_list_coords.txt',"w+")
+    str_to_write=''
     for r in printlist:
         it+=1
-        print(r,end=' ')
+        #print(r,end=' ')
+        str_to_write+=r
         if it%10==0:
-            print("")
+            #print("")
+            f.write(str_to_write+'\n')
+            str_to_write=''
+    
+    f.write(str_to_write+'\n')
+            
+
 
     
-        
+    #f= open(save_location+'contour_list_coords.txt',"w+")
+    
+    
 
     #print(finalContourList,end=' ')
     
