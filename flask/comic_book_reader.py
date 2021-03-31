@@ -1,6 +1,7 @@
 import cv2,time
 import os
 import matplotlib.pyplot as plt 
+import numpy as np
 
 def get_contour_precedence(contour, cols):
     tolerance_factor = 200
@@ -13,41 +14,58 @@ def findSpeechBubbles(image):
 
     printlist=[] 
     #create gray image
-    plt.imshow(image, cmap = None, interpolation = None)
-    plt.xticks([]), plt.yticks([])  
-    plt.show()
-    plt.clf()
+    #---------------Akash----------
+    # plt.imshow(image, cmap = None, interpolation = None)
+    # plt.xticks([]), plt.yticks([])  
+    # plt.show()
+    # plt.clf()
+
+    #--------------Preeth----------
+    cv2.imshow("input image",image)
+    cv2.waitKey()
+
     
     imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     #cv2.imwrite('C:/Users/Akash/Desktop/Test_gray.jpg', imageGray)
 
     #show gray image
-    plt.imshow(imageGray, cmap = 'gray', interpolation = 'bicubic')
-    plt.xticks([]), plt.yticks([])  
-    plt.show()
-    plt.clf()
+      #---------------Akash----------
+    # plt.imshow(imageGray, cmap = 'gray', interpolation = 'bicubic')
+    # plt.xticks([]), plt.yticks([])  
+    # plt.show()
+    # plt.clf()
+
+    #--------------Preeth----------
+    cv2.imshow("gray image",image)
+    cv2.waitKey()
+    
 
 
     binary = cv2.threshold(imageGray,235,255,cv2.THRESH_BINARY)[1]
 
-
+    #---------------Akash----------
     #plt.clf()
-    plt.imshow(binary, cmap = 'gray', interpolation = 'bicubic')
-    plt.xticks([]), plt.yticks([]) 
-    #plt.savefig("C:\\Users\\Desktop\\temp\\output\\binary_op.jpg") 
-    plt.title("binary threshold image (235-255)")
-    plt.show()
-    plt.clf()
+    # plt.imshow(binary, cmap = 'gray', interpolation = 'bicubic')
+    # plt.xticks([]), plt.yticks([]) 
+    # #plt.savefig("C:\\Users\\Desktop\\temp\\output\\binary_op.jpg") 
+    # plt.title("binary threshold image (235-255)")
+    # plt.show()
+    # plt.clf()
+
+    #--------------Preeth----------
+    cv2.imshow("threshold image",binary)
+    cv2.waitKey()
 
     #-------------------------------------------------------------
     
     binary_inv= cv2.threshold(imageGray,235,255,cv2.THRESH_BINARY_INV)[1]
-    plt.imshow(binary_inv, cmap = 'gray', interpolation = 'bicubic')
-    plt.xticks([]), plt.yticks([]) 
-    #plt.savefig("C:\\Users\\Desktop\\temp\\output\\binary_op.jpg") 
-    plt.title("binary threshold inverted image (235-255)")
-    plt.show()
-    plt.clf()
+      #---------------Akash----------
+    # plt.imshow(binary_inv, cmap = 'gray', interpolation = 'bicubic')
+    # plt.xticks([]), plt.yticks([]) 
+    # #plt.savefig("C:\\Users\\Desktop\\temp\\output\\binary_op.jpg") 
+    # plt.title("binary threshold inverted image (235-255)")
+    # plt.show()
+    # plt.clf()
 
     #-------------------------------------------------------------
 
@@ -58,9 +76,6 @@ def findSpeechBubbles(image):
     contourMap = filterContoursBySize(contours)
     finalContourList = list(contourMap.values())
 
-    
-    
-    
 
     finalContourList.sort(key=lambda x:get_contour_precedence(x, binary.shape[1]))
 
@@ -68,7 +83,7 @@ def findSpeechBubbles(image):
     pts_x=[]
     pts_y=[]
     print("\n\n\n\n")
-    mod10=0
+   
     for i in finalContourList:
         for j in i:
             
@@ -77,10 +92,18 @@ def findSpeechBubbles(image):
             pts_y.append(-1*j[0][1])
             
                 
-                
+    #---------------Akash---------- 
     #time.sleep(3)    
-    plt.scatter(pts_x, pts_y) 
-    plt.show() 
+    # plt.scatter(pts_x, pts_y) 
+    # plt.show()
+    
+    # ---------------preeth-------
+    plt.scatter(pts_x,pts_y)
+    plt.savefig(r"C:\Users\HOME\Desktop\New folder\comic-book-reader\flask\plot.png")
+    plt.clf()
+ 
+    
+    
 
     it=0
     for r in printlist:
@@ -88,6 +111,8 @@ def findSpeechBubbles(image):
         print(r,end=' ')
         if it%10==0:
             print("")
+
+    
         
 
     #print(finalContourList,end=' ')
