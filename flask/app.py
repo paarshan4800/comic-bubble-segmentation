@@ -47,12 +47,15 @@ def segment():
 		img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
 		
 
-		contours = findSpeechBubbles(img,timestamp)
+		contours,save_location = findSpeechBubbles(img,timestamp)
+		cv2.drawContours(img, contours, -1, (0, 255, 0), 3)
+		#cv2.imwrite('C:/Users/Akash/Desktop/Contours.jpg', img)
+		_, buffer = cv2.imencode('.jpg', img)
 		
-		print("\n\n\n\n")
+		cv2.imwrite(save_location+'localized_bubbles.png',img)
 		
 
-		return {"message":"20 percent done"}
+		return {"message":"50 percent done"}
 
 
 if __name__ == '__main__':

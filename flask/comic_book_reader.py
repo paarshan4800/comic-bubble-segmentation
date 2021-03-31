@@ -83,6 +83,7 @@ def findSpeechBubbles(image,timestamp):
     contourMap = {}
     finalContourList = []
     contourMap = filterContoursBySize(contours)
+    #contourMap=filterContainingContours(contourMap, hierarchy)
     finalContourList = list(contourMap.values())
 
 
@@ -136,7 +137,7 @@ def findSpeechBubbles(image,timestamp):
 
     #print(finalContourList,end=' ')
     
-    return finalContourList
+    return finalContourList,save_location
     
 def filterContoursBySize(contours):
     contourMap = {}
@@ -147,6 +148,19 @@ def filterContoursBySize(contours):
             epsilon = 0.0025*cv2.arcLength(contours[i], True)
             approximatedContour = cv2.approxPolyDP(contours[i], epsilon, True)
             contourMap[i] = approximatedContour
+    return contourMap
+
+
+def filterContainingContours(contourMap, hierarchy):
+    
+    for i in list(contourMap.keys()):
+        currentIndex = i
+        while hierarchy[0][currentIndex][3] > 0:
+            if hierarchy[0][currentIndex][3] in contourMap.keys():
+                contourMap.pop(hierarchy[0][currentIndex][3])
+            currentIndex = hierarchy[0][currentIndex][3]
+
+    
     return contourMap
 
 
