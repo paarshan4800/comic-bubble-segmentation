@@ -11,6 +11,7 @@ import pathlib
 
 
 
+
 application = Flask(__name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -21,31 +22,44 @@ def allowed_file(filename):
 @application.route('/segment', methods=['POST'])
 def segment():
 	# Check if an image was sent with the POST request
-	if 'image' not in request.files or not request.files['image']:
-		return 'No file sent', 400
+	# if 'image' not in request.files or not request.files['image']:
+	# 	return 'No file sent', 400
 
-	#print()
-	timestamp=str(datetime.datetime.now()).replace(' ','_')
-	timestamp=timestamp.replace(':','_')
-	#print(timestamp)
-	
+	inputs=request.files.getlist('image0')
+	it=0
 
-	# set path here
-	os.mkdir('output\\{}'.format(timestamp)) 
+	for _input in inputs:
 
-	# os.mkdir('C:\\Users\\HOME\\Desktop\\output\\{}'.format(timestamp)) 
-
-	file = request.files['image']
-
-	if file and allowed_file(file.filename):
-		npimg = numpy.fromstring(file.read(), numpy.uint8)
+		npimg = numpy.fromstring(_input.read(), numpy.uint8)
 		img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
 		
-		croppedImageList = segmentPage(img,timestamp)
+
 		
 		
 
-		return {"message":"50 percent done"}
+		
+		timestamp=str(datetime.datetime.now()).replace(' ','_')
+		timestamp=timestamp.replace(':','_')
+		#print(timestamp)
+		
+
+		
+		os.mkdir('output\\{}'.format(timestamp)) 
+
+		
+
+		
+
+		
+			
+		croppedImageList = segmentPage(img,timestamp)
+
+		it+=1
+			
+			
+		
+	return {"message":"50 percent done"}
 
 
 if __name__ == '__main__':
