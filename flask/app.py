@@ -27,13 +27,13 @@ def segment():
 	#print()
 	timestamp=str(datetime.datetime.now()).replace(' ','_')
 	timestamp=timestamp.replace(':','_')
-	print(timestamp)
+	#print(timestamp)
 	
 
 	# set path here
-	# os.mkdir('C:\\Users\\Akash\\Desktop\\ops\\{}'.format(timestamp)) 
+	os.mkdir('output\\{}'.format(timestamp)) 
 
-	# os.mkdir('C:\\Users\\HOME\\Desktop\\ops\\{}'.format(timestamp)) 
+	# os.mkdir('C:\\Users\\HOME\\Desktop\\output\\{}'.format(timestamp)) 
 
 	file = request.files['image']
 
@@ -49,4 +49,6 @@ def segment():
 
 
 if __name__ == '__main__':
+
+	
 	application.run(debug=True)

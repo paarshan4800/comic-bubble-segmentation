@@ -9,7 +9,7 @@ def get_contour_precedence(contour, cols):
     return ((origin[1] // tolerance_factor) * tolerance_factor) * cols + origin[0]
 
 def findSpeechBubbles(image,timestamp):
-    save_location="C:\\Users\\HOME\\Desktop\\ops\\"+timestamp+'\\'
+    save_location="output\\"+timestamp+'\\'
     
     #count and disp number of bubbles 
 
@@ -25,9 +25,10 @@ def findSpeechBubbles(image,timestamp):
     # cv2.imshow("input image",image)
     # cv2.waitKey()
 
-    # cv2.imwrite(save_location+'input_img.png',image)
+    cv2.imwrite(save_location+'input_img.png',image)
     imageGray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    #cv2.imwrite('C:/Users/Akash/Desktop/Test_gray.jpg', imageGray)
+   
+    # cv2.imwrite(save_location+'white.png', image)
 
     #show gray image
       #---------------Akash----------
@@ -37,7 +38,7 @@ def findSpeechBubbles(image,timestamp):
     # plt.clf()
 
     #--------------Preeth----------
-    # cv2.imwrite(save_location+'gray_img.png',imageGray)
+    cv2.imwrite(save_location+'gray_img.png',imageGray)
     binary = cv2.threshold(imageGray,235,255,cv2.THRESH_BINARY)[1]
 
     #---------------Akash----------
@@ -58,7 +59,7 @@ def findSpeechBubbles(image,timestamp):
     #-------------------------------------------------------------
 
     #cv2.imwrite(,)
-    # cv2.imwrite(save_location+'binary_thresh.png',binary)
+    cv2.imwrite(save_location+'binary_thresh.png',binary)
     
     binary_inv= cv2.threshold(imageGray,235,255,cv2.THRESH_BINARY_INV)[1]
       #---------------Akash----------
@@ -70,7 +71,7 @@ def findSpeechBubbles(image,timestamp):
     # plt.clf()
 
     #-------------------------------------------------------------
-    # cv2.imwrite(save_location+'binary_inv.png',binary_inv)
+    cv2.imwrite(save_location+'binary_inv.png',binary_inv)
 
     contours, hierarchy = cv2.findContours(binary,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
@@ -108,19 +109,19 @@ def findSpeechBubbles(image,timestamp):
     
     
 
-    # it=0
-    # f= open(save_location+'contour_list_coords.txt',"w+")
-    # str_to_write=''
-    # for r in printlist:
-    #     it+=1
-    #     #print(r,end=' ')
-    #     str_to_write+=r
-    #     if it%10==0:
-    #         #print("")
-    #         f.write(str_to_write+'\n')
-    #         str_to_write=''
+    it=0
+    f= open(save_location+'contour_list_coords.txt',"w+")
+    str_to_write=''
+    for r in printlist:
+        it+=1
+        #print(r,end=' ')
+        str_to_write+=r
+        if it%10==0:
+            #print("")
+            f.write(str_to_write+'\n')
+            str_to_write=''
     
-    # f.write(str_to_write+'\n')
+    f.write(str_to_write+'\n')
             
 
 
@@ -165,17 +166,40 @@ def cropSpeechBubbles(image, contours, padding = 0):
 
 def segmentPage(image, timestamp,shouldShowImage = True):
     contours,save_location = findSpeechBubbles(image,timestamp)
+
+    
+    
     croppedImageList = cropSpeechBubbles(image, contours)
+
+
+    white_image = image.copy()
+    white_image.fill(255)
+    cv2.drawContours(white_image, contours, -1, (0, 255, 0), 3)
+    cv2.imwrite(save_location+'Contour_in_white.png',white_image)
+
     cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
+
 	#cv2.imwrite('C:/Users/Akash/Desktop/Contours.jpg', img)
-	#cv2.imwrite(save_location+'localized_bubbles.png',image)
+    
+    
+    cv2.imwrite(save_location+'localized_bubbles.png',image)
     
     if shouldShowImage:
-        cv2.imshow('Speech Bubble Identification', croppedImageList[0])
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.imshow('Speech Bubble Identification', croppedImageList[0])
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+        os.mkdir(save_location+'segmented_bubbles')
+
+        print("\n\n\nNUMBER OF SPEECH BUBBLES =====> ",len(croppedImageList),"\n\n")
+
+        for img in range(len(croppedImageList)):
+            cv2.imwrite(save_location+'segmented_bubbles\\'+'cropped_imgs{}.png'.format(img),croppedImageList[img])
 
     return croppedImageList
+
+
+
+
 
 
 
