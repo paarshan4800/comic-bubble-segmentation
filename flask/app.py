@@ -3,7 +3,7 @@ import base64
 import io
 import numpy
 import os
-from comic_book_reader import  findSpeechBubbles
+from comic_book_reader import  findSpeechBubbles,segmentPage
 from flask import Flask, request
 import matplotlib.pyplot as plt #modded
 import datetime
@@ -31,14 +31,9 @@ def segment():
 	
 
 	# set path here
-	os.mkdir('C:\\Users\\Akash\\Desktop\\ops\\{}'.format(timestamp)) 
+	# os.mkdir('C:\\Users\\Akash\\Desktop\\ops\\{}'.format(timestamp)) 
 
-	
-	
-
-	
-
-	
+	# os.mkdir('C:\\Users\\HOME\\Desktop\\ops\\{}'.format(timestamp)) 
 
 	file = request.files['image']
 
@@ -46,13 +41,8 @@ def segment():
 		npimg = numpy.fromstring(file.read(), numpy.uint8)
 		img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
 		
-
-		contours,save_location = findSpeechBubbles(img,timestamp)
-		cv2.drawContours(img, contours, -1, (0, 255, 0), 3)
-		#cv2.imwrite('C:/Users/Akash/Desktop/Contours.jpg', img)
-		_, buffer = cv2.imencode('.jpg', img)
+		croppedImageList = segmentPage(img,timestamp)
 		
-		cv2.imwrite(save_location+'localized_bubbles.png',img)
 		
 
 		return {"message":"50 percent done"}
