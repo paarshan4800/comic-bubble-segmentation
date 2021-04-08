@@ -43,6 +43,9 @@ def segment():
 		
 
 		contours = findSpeechBubbles(img,timestamp)
+
+		
+
 		
 		print("\n\n\n\n")
 		
