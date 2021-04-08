@@ -33,12 +33,7 @@ def segment():
 	# set path here
 	os.mkdir('C:\\Users\\Akash\\Desktop\\ops\\{}'.format(timestamp)) 
 
-	
-	
 
-	
-
-	
 
 	file = request.files['image']
 

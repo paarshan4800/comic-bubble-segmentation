@@ -17,13 +17,13 @@ for imgs in range(13):
     img = image if len(image.shape) == 2 else image[:, :, 0]
     #print(len(img.shape))
     mask = np.zeros(image.shape, dtype=np.uint8)
-
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
     # cv2.imshow("grayscale",gray)
     # cv2.waitKey()
-
     cv2.imwrite(path+r"\grayscale.png",gray)
+
+
+
 
     blur = cv2.GaussianBlur(gray, (5,5), 0)
     thresh = cv2.threshold(blur, 230, 255, cv2.THRESH_BINARY )[1]
@@ -41,6 +41,7 @@ for imgs in range(13):
     cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
 
     cv2.imwrite(path+r"\segment_panels.png",image)
+
     # cv2.imshow("area",image)
     # cv2.waitKey()
 
@@ -51,6 +52,8 @@ for imgs in range(13):
 
         # dimensions
         img_area = image.shape[0] * image.shape[1]
+
+
         #print(img_area,"  //  ",0.02*img_area,"  \\  ",0.9*img_area," \\ ",area)
         # if the contour is very small or very big, it's likely wrongly detected
         if area < (0.02 * img_area) or area > (0.9 * img_area):
@@ -68,6 +71,8 @@ for imgs in range(13):
         # cv2.imshow("panel",panel)
         # cv2.waitKey()
         cv2.imwrite(path+r'\panel{}.png'.format(i),panel)
+
+        
     if len(panels)==0:
         print("empty list")
         panels.append(original)
@@ -78,4 +83,4 @@ for imgs in range(13):
 
         cv2.imwrite(path+r'\panel1.png')
         
-    print("\n\nNo of panels :===== ",len(panels),"\n\n")
+    print("\n\nNo of panels ===== ",len(panels),"\n\n")
