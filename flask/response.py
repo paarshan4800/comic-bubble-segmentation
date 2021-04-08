@@ -1,16 +1,10 @@
-import cv2,time
 from panel_extracter_final import *
 from speech_bubble import *
 from extract_bubble import *
-
-import matplotlib.pyplot as plt
-import datetime
-import numpy as np
 from flask import Flask, request, send_file
-import os
 from flask_cors import CORS
 from PIL import Image
-import io
+
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -21,30 +15,21 @@ def allowed_file(filename):
 		filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-
-
-		
-
 @app.route("/image_upload", methods=["POST"])
 def image_upload():
-	print("Hello")
-	print(request.files['image'])
 	_input = request.files['image']
 	npimg = np.fromstring(_input.read(), np.uint8)
 	img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
 	cv2.imwrite("userInput.png", img)
 	panel_extract(img)
 	
-
 	return {"message": "Image rcvd image_upload"}
-
 
 
 @app.route('/user-sample-images',methods=['POST'])
 def user_sample_images():
 	
 	req=request.get_json(force=True)
-	print(req)
 	image_filename=req["filename"]
 	panel_extract(cv2.imread('sample_images\\panels\\{}'.format(image_filename)))
 	return {"message": "Image rcvd user-sample"}
@@ -72,7 +57,7 @@ def segment():
 	cv2.drawContours(file, contours, -1, (0, 255, 0), 3)
 	cv2.imwrite(save_location+'localized_bubbles.png',file)
 	
-	print("\n\n\n\n")
+	
 
 	os.mkdir(save_location+'segmented_bubbles')
 
@@ -83,15 +68,12 @@ def segment():
 
 	
 		
-		
 	return {"message":"70+ percent done"}
-
-		
 
 
 @app.route("/fetch-sample-images/<filename>")
 def fetch_sample_images(filename):
-	print(filename)
+	
 	return send_file(
 		'./sample_images/single/'+filename,
 		mimetype='image/jpeg',
@@ -107,20 +89,8 @@ def sample_images():
 	for image in sampleImages:
 		response.append(image)
 	
-	print(response)
-
 	return {"message": "sample images", "images": response}
 
-
-# @app.route("/image_upload", methods=["POST"])
-# def image_upload():
-# 	print("Hello")
-# 	print(request.files['image'])
-# 	_input = request.files['image']
-# 	npimg = np.fromstring(_input.read(), np.uint8)
-# 	img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
-# 	cv2.imwrite("userInput.png", img)
-# 	return {"message": "Image rcvd"}
 
 
 @app.route("/files/output/directories", methods=["GET"])

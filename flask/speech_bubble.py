@@ -1,4 +1,4 @@
-import cv2,time
+import cv2,time,io
 import os
 import matplotlib.pyplot as plt 
 import numpy as np
@@ -76,7 +76,7 @@ def findSpeechBubbles(image,path):
 	#save x and y co-ordinates 
 	pts_x=[]
 	pts_y=[]
-	print("\n\n\n\n")
+	
    
 	for i in finalContourList:
 		for j in i:
@@ -98,10 +98,8 @@ def findSpeechBubbles(image,path):
 	str_to_write=''
 	for r in printlist:
 		it+=1
-		#print(r,end=' ')
 		str_to_write+=r
 		if it%10==0:
-			#print("")
 			f.write(str_to_write+'\n')
 			str_to_write=''
 	

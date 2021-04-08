@@ -99,5 +99,5 @@ def panel_extract(image):
 		cv2.imwrite(path+r'\panel'+r'\panel0.png')
 	
 #print("\n\nNo of panels ===== ",len(panels),"\n\n")
-	print("panels extracted")
-	print(response)
+	# print("panels extracted")
+	# print(response)
