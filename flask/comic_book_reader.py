@@ -92,7 +92,7 @@ def findSpeechBubbles(image,timestamp):
     for i in finalContourList:
         for j in i:
             
-            printlist.append('('+str(j[0][0])+','+str(j[0][0])+')')
+            printlist.append('('+str(j[0][0])+','+str(j[0][1])+')')
             pts_x.append(j[0][0])
             pts_y.append(-1*j[0][1])
             
