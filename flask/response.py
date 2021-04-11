@@ -75,6 +75,10 @@ def segment():
 
     file = cv2.imread(var)
 
+    var = var.replace("\\", "\\\\")
+    dir_name = dir_name.replace("\\", "\\\\")
+    print(dir_name, "DIRNAME")
+
     contours, save_location = findSpeechBubbles(file, dir_name)
     croppedImageList = cropSpeechBubbles(file, contours)
 
@@ -95,7 +99,7 @@ def segment():
         cv2.imwrite(save_location+'segmented_bubbles\\' +
                     'cropped_imgs{}.png'.format(img), croppedImageList[img])
 
-    return {"message": "70+ percent done", "localized_bubbles": localized_bubbles}
+    return {"message": "70+ percent done", "chosenPanel": var, "localized_bubbles": localized_bubbles}
 
 
 @app.route("/files/output/directories", methods=["GET"])

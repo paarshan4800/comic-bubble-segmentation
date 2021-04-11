@@ -36,7 +36,7 @@ def extract_path(var):
 def findSpeechBubbles(image,path):
 
 	
-	save_location=path+"\\"
+	save_location=path+"\\\\"
 	
    
 
