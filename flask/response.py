@@ -107,16 +107,61 @@ def test():
     response = {}
     response['directories'] = []
 
+    # directory -> timestamp
     for directory in os.listdir("./output"):
         temp = {
             'folderName': directory,
-            'files': os.listdir("./output/"+directory),
-            'segmentedBubbles': os.listdir("./output/"+directory+"/segmented_bubbles")
+            'files': [],
+            'folders': []
         }
+
+        # inside timestamp folder
+        for item in os.listdir("./output/"+directory):
+            # If file
+            if "." in item:
+                temp['files'].append(item)
+            # If folder
+            else:
+                temp['folders'].append(item)
+
+        subfolder = []
+
+        # Inside each panel folder
+        for folder in temp['folders']:
+            temp_panel = {}
+            temp_panel['folderName'] = folder
+            temp_panel['files'] = os.listdir("./output/"+directory+"/"+folder)
+
+            # Checking whether segmented bubbles folder has been created or not
+            # It will be created if the panel has been sent to /segment
+            # Otherwise it wont be created
+            if "segmented_bubbles" in os.listdir("./output/"+directory+"/"+folder):
+                temp_panel['segmentedBubbles'] = os.listdir(
+                    "./output/"+directory+"/"+folder+"/segmented_bubbles")
+
+            subfolder.append(temp_panel)
+
+        temp['folders'] = subfolder
 
         response['directories'].append(temp)
 
     return {"message": "All directories", "data": response}
+
+
+@app.route("/folders", methods=["POST"])
+def folders():
+    data = request.get_json(force=True)
+    allContent = os.listdir(data["path"])
+
+    files = []
+    folders = []
+    for content in allContent:
+        if "." in content:
+            files.append(content)
+        else:
+            folders.append(content)
+
+    return {"currentDirectoryPath":data["path"],"files": files, "folders": folders}
 
 
 if __name__ == "__main__":
