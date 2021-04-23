@@ -5,11 +5,17 @@ from flask import Flask, request, send_file
 from flask_cors import CORS
 from PIL import Image
 
+
 app = Flask(__name__)
 cors = CORS(app)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+
+
+
+#IMPORTANT CHANGE !!!!!!!!!!!!!!!!!!!!!!!!
+pytesseract.pytesseract.tesseract_cmd =  'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' 
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -80,7 +86,8 @@ def segment():
     print(dir_name, "DIRNAME")
 
     contours, save_location = findSpeechBubbles(file, dir_name)
-    croppedImageList = cropSpeechBubbles(file, contours)
+    print(save_location)
+    croppedImageList,extracted_string = cropSpeechBubbles(save_location,file, contours)
 
     white_image = file.copy()
     white_image.fill(255)
@@ -99,7 +106,7 @@ def segment():
         cv2.imwrite(save_location+'segmented_bubbles\\' +
                     'cropped_imgs{}.png'.format(img), croppedImageList[img])
 
-    return {"message": "70+ percent done", "chosenPanel": var, "localized_bubbles": localized_bubbles}
+    return {"message": "90 percent done", "chosenPanel": var, "localized_bubbles": localized_bubbles,"extracted_string":extracted_string}
 
 
 @app.route("/files/output/directories", methods=["GET"])
