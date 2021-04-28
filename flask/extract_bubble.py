@@ -5,10 +5,8 @@ import numpy as np
 import datetime
 import pytesseract
 import enchant
-import numpy
 from speech_bubble import *
 import re
-import pytesseract
 from autocorrect import Speller
 
 
@@ -17,6 +15,7 @@ spell = Speller(lang='en')
 
 
 def cropSpeechBubbles(save_location,image, contours, padding = 0):
+	
 	croppedImageList = []
 	for contour in contours:
 		rect = cv2.boundingRect(contour)
@@ -25,12 +24,18 @@ def cropSpeechBubbles(save_location,image, contours, padding = 0):
 		croppedImageList.append(croppedImage)
 
 	# TESSERACT OCR MODULE#
-	extracted_text=parseComicSpeechBubbles(croppedImageList)
+	junk,extracted_text=parseComicSpeechBubbles(croppedImageList)
 	#text file that stores extracted text
 	f= open(save_location+'extracted_text.txt',"w+")
 	extracted_string="".join(extracted_text)
 	f.write(extracted_string+'\n')
 	f.close()
+
+	#writing junk values
+	junkfile= open(save_location+'junk_detected.txt',"w+")
+	junk_string="".join(junk)
+	junkfile.write(junk+'\n')
+	junkfile.close()
 
 	
 	
@@ -45,20 +50,16 @@ def shrinkByPixels(im, pixels):
 
 # Adjust the gamma in an image by some factor
 def adjust_gamma(image, gamma=1.0):
-   invGamma = 1.0 / gamma
-   table = numpy.array([((i / 255.0) ** invGamma) * 255
-	  for i in numpy.arange(0, 256)]).astype("uint8")
-   return cv2.LUT(image, table)
+	invGamma = 1.0 / gamma
+	table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+	return cv2.LUT(image, table)
 
 
 
 #uncomment the next block for 100 percent
 
-"""
 def processScript(script):
-	# Some modern comics have this string on their cover page
-	if "COMICS.COM" in script:
-		return ''
+	
 
 	# Tesseract sometimes picks up 'I' chars as '|'
 	script = script.replace('|','I')
@@ -74,7 +75,7 @@ def processScript(script):
 			script = script.replace(char,'')
 
 	# This line removes "- " and concatenates words split on two lines
-	#  One notable edge case we don't handle here, hyphenated words split on two lines
+	
 	script = re.sub(r"(?<!-)- ", "", script)
 	words = script.split()
 	for i in range(0, len(words)):
@@ -98,49 +99,60 @@ def processScript(script):
 		return ''
 
 	return final
-"""
+
 # Apply the ocr engine to the given image and return the recognized script where illegitimate characters are filtered out
 def tesseract(image):
-	# We could consider using tessedit_char_whitelist to limit the recognition of Tesseract. 
-	#   Doing that degraded OCR performance in practice
+	
 	script = pytesseract.image_to_string(image, lang = 'eng')
-	#print(script)
-	
-	#remove the next line for 100% implemention
-	return script 
-	
-	
-	return processScript(script)
+	junk=script
+			
+	corrected_text= processScript(script)
+	junklist=""
+	hash_map={}
+	for i in corrected_text:
+		if i not in hash_map.keys():
+			hash_map[i]=1
+		else:
+			hash_map[i]+=1
+	for i in junk:
+		if i not in hash_map.keys():
+			junklist+=i
+
+	return junklist,corrected_text+"\n"
 
 
 
-def parseComicSpeechBubbles(croppedImageList, shouldShowImage = False):
+
+def parseComicSpeechBubbles(croppedImageList, shouldShowImage = True):
 	scriptList = []
 
-	for croppedImage in croppedImageList:
+	for it,croppedImage in enumerate(croppedImageList):
+		
 		# Enlarge cropped image
 		croppedImage = cv2.resize(croppedImage, (0,0), fx = 2, fy = 2)
 		# # Denoise
 		croppedImage = cv2.fastNlMeansDenoisingColored(croppedImage, None, 10, 10, 7, 15)
 
 		if shouldShowImage:
-			cv2.imshow('Cropped Speech Bubble', croppedImage)
-			cv2.waitKey(0)
-			cv2.destroyAllWindows()
+			pass
+			#cv2.imwrite("denoise/croppedImage{}.png".format(it),croppedImage)
 
 		# Pass cropped image to the ocr engine
-		script = tesseract(croppedImage)
-	
+		junk,script = tesseract(croppedImage)
+
+		
+		
 		# If we don't find any characters, try shrinking the cropped area. 
 		#  This occasionally helps tesseract recognize single word lines, but increases processing time.
 		count = 0
 		while (script == '' and count < 3):
 			count+=1
 			croppedImage = shrinkByPixels(croppedImage, 5)
-			script = tesseract(croppedImage)
+			#cv2.imwrite("denoise/croppedImageSHRUNK{}_{}.png".format(it,count),croppedImage)
+			junk,script = tesseract(croppedImage)
 
 		if script != '' and script not in scriptList:
 			scriptList.append(script)
 
-	return scriptList
+	return junk,scriptList
 

@@ -22,6 +22,7 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+
 @app.route("/fetch-images")
 def fetch_images():
     filepath = request.args.get('filepath')
