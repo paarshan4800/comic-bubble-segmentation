@@ -3,6 +3,9 @@ import os
 import matplotlib.pyplot as plt 
 import numpy as np
 import datetime
+from speech_bubble_extraction import cropSpeechBubbles
+
+
 
 def get_contour_precedence(contour, cols):
 	tolerance_factor = 200
@@ -10,38 +13,11 @@ def get_contour_precedence(contour, cols):
 	return ((origin[1] // tolerance_factor) * tolerance_factor) * cols + origin[0]
 
 
-def extract_path(var):
-	var=var[::-1]
-
-	dir_name=""
-	flag=False
-	_in=0
-	for character in var:
-		if  not flag:
-
-			if character!='\\':
-				continue
-			else:
-				flag=True
-		else:
-			dir_name+=character
-	dir_name=dir_name[::-1]
-	
-	var=var[::-1]
-	return var,dir_name
-
-
-	
-
 def findSpeechBubbles(image,path):
 
-	
 	save_location=path+"\\\\"
 	
-   
-
 	printlist=[] 
-	
 
 	cv2.imwrite(save_location+'input_img.png',image)
 
@@ -106,7 +82,8 @@ def findSpeechBubbles(image,path):
 	f.write(str_to_write+'\n')
 			
 	return finalContourList,save_location
-	
+
+
 
 
 def filterContoursBySize(contours):
