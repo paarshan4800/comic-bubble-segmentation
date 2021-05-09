@@ -63,7 +63,7 @@ def sample_images():
 @app.route("/image_upload", methods=["POST"])
 def image_upload():
 	try:
-		_input = request.files['image']
+		_input = request.files.get('image')
 		npimg = np.fromstring(_input.read(), np.uint8)
 		img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
 		cv2.imwrite("userInput.png", img)
