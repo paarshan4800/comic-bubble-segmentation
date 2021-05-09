@@ -9,11 +9,12 @@ from panel_extraction import panel_extract
 from feature_extraction import segment_panel, extract_path
 
 # FLASK MODULES
-from flask import Flask, request, send_file
-from flask_cors import CORS
+from flask import Flask, request, send_file,Response
+from flask_cors import CORS,cross_origin
 
 # Image processing
 from PIL import Image
+from flask.helpers import make_response
 
 
 app = Flask(__name__)
@@ -76,12 +77,25 @@ def image_upload():
 
 # User selecting images from given samples
 @app.route('/user-sample-images', methods=['POST'])
+@cross_origin(origin='localhost',headers=['Content-Type'])
 def user_sample_images():
 	try:
+		print("came")
+		print(request.method)
+		print(request.get_json())
 		req = request.get_json(force=True)
+		print("came")
 		image_filename = req["filename"]
+		print("came")
 		print(image_filename)
 		panels, inputImage = panel_extract(cv2.imread(image_filename))
+
+		response1=make_response({"message": "Extracted panels after user selected one from sample images", "inputImage": inputImage, "panels": panels}, 200)
+		response1.headers["Content-Type"]="application/json"
+		response1.headers["Access-Control-Allow-Origin"]='*'
+
+		return response1
+
 		return {"message": "Extracted panels after user selected one from sample images", "inputImage": inputImage, "panels": panels}, 200
 	except:
 		return {"message": "Server Error"}, 500
@@ -89,6 +103,7 @@ def user_sample_images():
 
 # Start segmentation process provided filepath like output\04_09_2021_14-11-47-950603\panel0\panel0.png
 @app.route('/segment', methods=['POST'])
+@cross_origin(origin='localhost',headers=['Content-Type'])
 def segment():
 	try:
 		req = request.get_json(force=True)
@@ -155,6 +170,7 @@ def test():
 
 
 @app.route("/folders", methods=["POST"])
+@cross_origin(origin='localhost',headers=['Content-Type'])
 def folders():
 	try:
 		data = request.get_json(force=True)
@@ -179,6 +195,7 @@ def folders():
 
 
 @app.route("/file-contents", methods=["POST"])
+@cross_origin(origin='localhost',headers=['Content-Type'])
 def file_contents():
 	try:
 		data = request.get_json(force=True)
@@ -189,6 +206,7 @@ def file_contents():
 		return {"fileContents": f.read()}, 200
 	except:
 		return {"message": "Server Error"}, 500
+
 
 
 if __name__ == "__main__":
