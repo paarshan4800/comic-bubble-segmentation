@@ -85,11 +85,15 @@ def panel_extract(image):
     if len(panels) == 0:
         print("empty list")
         panels.append(original)
+        os.mkdir(path+r'\\panel{}'.format(image_number))
+        print("created panel")
 
         # cv2.imshow("panel",panels[0])
         # cv2.waitKey()
 
-        cv2.imwrite(path+r'\\panel'+r'\\panel0.png')
+        cv2.imwrite(path+r'\\panel0'+r'\\panel0.png',panels[0])
+        response.append(path+r'\\panel{}'.format(image_number) +
+                        r'\\panel{}.png'.format(image_number))
 
     inputImage = path+r'\\original_input.png'
     return response, inputImage

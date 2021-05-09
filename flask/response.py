@@ -89,7 +89,7 @@ def user_sample_images():
 		print("came")
 		print(image_filename)
 		panels, inputImage = panel_extract(cv2.imread(image_filename))
-
+		print("foo baar")
 		return {"message": "Extracted panels after user selected one from sample images", "inputImage": inputImage, "panels": panels}, 200
 	except:
 		return {"message": "Server Error"}, 500
