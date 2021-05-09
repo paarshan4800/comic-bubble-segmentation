@@ -90,12 +90,6 @@ def user_sample_images():
 		print(image_filename)
 		panels, inputImage = panel_extract(cv2.imread(image_filename))
 
-		response1=make_response({"message": "Extracted panels after user selected one from sample images", "inputImage": inputImage, "panels": panels}, 200)
-		response1.headers["Content-Type"]="application/json"
-		response1.headers["Access-Control-Allow-Origin"]='*'
-
-		return response1
-
 		return {"message": "Extracted panels after user selected one from sample images", "inputImage": inputImage, "panels": panels}, 200
 	except:
 		return {"message": "Server Error"}, 500
