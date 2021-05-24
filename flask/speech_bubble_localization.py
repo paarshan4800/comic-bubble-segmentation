@@ -90,7 +90,7 @@ def filterContoursBySize(contours):
 	contourMap = {}
 	for i in range(len(contours)):
 		# Filter out speech bubble candidates with unreasonable size
-		if cv2.contourArea(contours[i]) < 120000 and cv2.contourArea(contours[i]) > 4000:
+		if cv2.contourArea(contours[i]) < 150000 and cv2.contourArea(contours[i]) > 4000:
 			# Smooth out contours that were found
 			epsilon = 0.0025*cv2.arcLength(contours[i], True)
 			approximatedContour = cv2.approxPolyDP(contours[i], epsilon, True)

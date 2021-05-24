@@ -16,8 +16,14 @@ def cropSpeechBubbles(save_location,image, contours, padding = 0):
 
 	#text file that stores extracted text
 	f= open(save_location+'extracted_text.txt',"w+")
-	extracted_string="".join(extracted_text)
-	f.write(extracted_string+'\n')
+
+	strToFile = ""
+	for i,text in enumerate(extracted_text):
+		strToFile += ( str(i+1) + ") " + text + "\n")
+
+	# extracted_string="".join(extracted_text)
+	# f.write(extracted_string+'\n')
+	f.write(strToFile)
 	f.close()
 
 	#writing junk values
@@ -29,10 +35,11 @@ def cropSpeechBubbles(save_location,image, contours, padding = 0):
 	
 	
 	#return the cropped image and extracted text
-	return croppedImageList,extracted_string
+	return croppedImageList,extracted_text
 
 def parseComicSpeechBubbles(croppedImageList, shouldShowImage = True):
 	scriptList = []
+	junkList = []
 
 	for it,croppedImage in enumerate(croppedImageList):
 		
@@ -63,5 +70,7 @@ def parseComicSpeechBubbles(croppedImageList, shouldShowImage = True):
 		if script != '' and script not in scriptList:
 			scriptList.append(script)
 
-	return junk,scriptList
+		junkList.append(junk)
+
+	return "".join(junkList),scriptList
 

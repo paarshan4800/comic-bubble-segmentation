@@ -3,6 +3,7 @@ import pytesseract
 import os
 import numpy as np
 import cv2
+import traceback
 
 # import functions
 from panel_extraction import panel_extract
@@ -105,11 +106,14 @@ def segment():
 		print(var)
 
 		var, dir_name = extract_path(var)
-		localized_bubbles, extracted_string = segment_panel(var, dir_name)
+		localized_bubbles, extracted_text = segment_panel(var, dir_name)
 
-		return {"message": "Localized Bubbles and Extracted Text", "chosenPanel": var, "localized_bubbles": localized_bubbles, "extracted_string": extracted_string}, 200
+		print(extracted_text)
 
-	except:
+		return {"message": "Localized Bubbles and Extracted Text", "chosenPanel": var, "localized_bubbles": localized_bubbles, "extracted_string": extracted_text}, 200
+
+	except Exception as e:
+		traceback.print_exc()
 		return {"message": "Server Error"}, 500
 
 

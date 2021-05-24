@@ -1,5 +1,10 @@
 import cv2
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
+# plt.use('Agg')
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
 from speech_bubble_localization import cropSpeechBubbles,findSpeechBubbles
 import os
 
@@ -15,7 +20,7 @@ def segment_panel(var,dir_name):
     contours, save_location = findSpeechBubbles(file, dir_name)
     
     #crops and return the speech bubbles 
-    croppedImageList,extracted_string = cropSpeechBubbles(save_location,file, contours)
+    croppedImageList,extracted_text = cropSpeechBubbles(save_location,file, contours)
 
     #create white image to show outline of bubble
     white_image = file.copy()
@@ -28,8 +33,8 @@ def segment_panel(var,dir_name):
     localized_bubbles = save_location+'localized_bubbles.png'
     cv2.imwrite(localized_bubbles, file)
 
-
-    os.mkdir(save_location+'segmented_bubbles')
+    if "segmented_bubbles" not in os.listdir(save_location):
+        os.mkdir(save_location+'segmented_bubbles')
 
     #print("\n\n\nNUMBER OF SPEECH BUBBLES =====> ",len(croppedImageList),"\n\n")
 
@@ -38,7 +43,8 @@ def segment_panel(var,dir_name):
         cv2.imwrite(save_location+'segmented_bubbles\\' +
                     'cropped_imgs{}.png'.format(img), croppedImageList[img])
 
-    return localized_bubbles,extracted_string
+    
+    return localized_bubbles,extracted_text
 
 def extract_path(var):
 	var=var[::-1]

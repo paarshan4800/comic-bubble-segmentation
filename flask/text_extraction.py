@@ -70,7 +70,7 @@ def tesseract(image):
 	
 	script = pytesseract.image_to_string(image, lang = 'eng')
 	junk=script
-			
+	
 	corrected_text= processScript(script)
 	junklist=""
 	hash_map={}
@@ -83,4 +83,4 @@ def tesseract(image):
 		if i not in hash_map.keys():
 			junklist+=i
 
-	return junklist,corrected_text+"\n"
+	return junklist,corrected_text
