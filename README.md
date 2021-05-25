@@ -1,15 +1,16 @@
-**Backend**
-**Technologies used:** Python, Flask
-**Prerequisites:**
-**Step 1:** Install the latest version of python. Make sure to set the correct path while installation.
-Navigate to the _comic-bubble-segmentation\flask_ folder.
-**Step 2:** Install all the required python modules using these commands.
-            `pip install flask
-            pip install numpy
-            pip install matplotlib
-            pip install pathlib
-            pip insall opencv-python
-            pip install autocorrect
-            pip install pyenchant
-            pip install pytesseract`
-**Step 3:** Run the `response.py` python file
+# Detection and Segmentation of Speech Bubbles from Comic Images
+Speech Bubbles in comic images are segmented and its text are extracted.
+
+This repository contains the server part of the project developed using Python Flask. You can find the UI code [here](https://github.com/paarshan4800/comic-bubble-segmentation-frontend).
+
+
+## Setup
+- Download and Install [Python](https://www.python.org/)
+- To install all the required python modules, run the command 
+
+    ```pip install -r requirements.txt```
+- Download and install [Tesseract OCR](https://digi.bib.uni-mannheim.de/tesseract/).
+- Make sure you have created a folder ```output``` in the project directory.
+
+## Launching the server
+- Run ```python response.py``` to start Flask server.
